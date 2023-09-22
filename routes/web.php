@@ -19,31 +19,35 @@ use App\Http\Controllers\WelcomeController;
 |
 */
 
-Route::get('/', [WelcomeController::class, 'index'])
-    ->name('welcome');
-
+Route::get('/', function () {
+    return view('welcome');
+});
 
 Route::get('/about-project', function () {
     return view('aboutproject');
 });
-Route::group(['prefix' => 'guest'], static function() {
-    Route::get('/news', [NewsController::class, 'index'])
-        ->name('news');
-    Route::get('news/{id}/show', [NewsController::class,'show'])
-        ->where('id', '\d+')
-        ->name('news.show');
 
-    Route::get('/categoryNews', [CategoryNewsController::class, 'index'])
-        ->name('categoryNews');
-    Route::get('/categoryNews/{id}/show', [CategoryNewsController::class, 'show'])
-        ->where('id', '\d+')
-        ->name('categoryNews.show');
+Route::prefix('guest')
+    ->group(static function() {
+        Route::get('/news', [NewsController::class, 'index'])
+            ->name('news');
+        Route::get('news/{id}/show', [NewsController::class,'show'])
+            ->where('id', '\d+')
+            ->name('news.show');
+
+        Route::get('/categoryNews', [CategoryNewsController::class, 'index'])
+            ->name('categoryNews');
+        Route::get('/categoryNews/{id}/show', [CategoryNewsController::class, 'show'])
+            ->where('id', '\d+')
+            ->name('categoryNews.show');
 });
 
 Route::prefix('admin')
     ->group(function () {
-    Route::get('/', AdminController::class)->name('index');
-    Route::resource('categories', AdminCategoryController::class);
-    Route::resource('news', AdminNewsController::class);
+        Route::get('/', AdminController::class)
+            ->name('index');
+        Route::resource('categories', AdminCategoryController::class);
+        Route::resource('categories/{id)/show', AdminCategoryController::class);
+        Route::resource('news', AdminNewsController::class);
 });
 

@@ -1,30 +1,41 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
 trait CategoryNewsTrait
 {
-    use NewsTrait;
-    public function getCategoryNews(int $category = null): array
-    {
+    private array $categoryList = [
+        [
+            "id" => "1",
+            "title" => "sport",
+            "description" => "Спорт"
+        ],
+        [
+            "id" => "2",
+            "title" => "politic",
+            "description" => "Общество"
+        ],
+        [
+            "id" => "3",
+            "title" => "art",
+            "description" => "Творчество"
+        ]
+    ];
 
-        $categoryNews = [];
-        $quantityCategory = 5;
-        if($category === null) {
-            for($i = 1; $i <= $quantityCategory; $i++) {
-                $categoryNews[$i] =
-                    [
-                        "id" => $i,
-                        "title" => fake()->jobTitle(),
-                        "description" => fake()->text(100),
-                    ];
+
+    public function getCategoriesNews(int $id = null): array
+    {
+        $categoryNews = $this->categoryList;
+        foreach ($categoryNews as $categoryNew) {
+            if ($categoryNew['id'] === $id) {
+                return $categoryNew;
             }
-            return $categoryNews;
         }
-        return [
-            'id' => $category,
-            'title' => fake()->jobTitle(),
-            'description' => fake()->text(100),
-        ];
+        return $this->categoryList;
+    }
+    public function addCategory(array $category): void
+    {
+        //
     }
 }

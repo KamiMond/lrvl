@@ -9,14 +9,14 @@ class CategoryNewsController
     public function index()
     {
         return view('categoryNews.index', [
-            'categoryNewsList' => $this->getCategoryNews(),
+            'categoryNewsList' => $this->getCategoriesNews(),
         ]);
     }
 
     public function show(int $id)
     {
         return view('categoryNews.show', [
-            'categoryNews' => $this->getCategoryNews($id),
+            'categoryNews' => $this->getCategoriesNews($id),
             ]);
     }
 }

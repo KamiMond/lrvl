@@ -32,7 +32,8 @@ class NewsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->flash();
+        return redirect()->route('admin.news.create');
     }
 
     /**
