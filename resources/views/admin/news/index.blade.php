@@ -4,7 +4,7 @@
         <h1 class="h2">Список новостей</h1>
         <div class="btn-toolbar mb-2 mb-md-0">
             <div class="btn-group me-2">
-                <a href="{{route('admin.news.create')}}">Добавить новость</a>
+                <a href="{{ route('admin.news.create') }}">Добавить новость</a>
             </div>
         </div>
     </div>
@@ -24,11 +24,11 @@
             <tbody>
             @forelse($newsList as $news)
             <tr>
-                <td>{{$news['id']}}</td>
-                <td>{{$news['title']}}</td>
-                <td>{{$news['status']}}</td>
-                <td>{{$news['author']}}</td>
-                <td>{{$news['created_at']}}</td>
+                <td>{{$news->id}}</td>
+                <td>{{$news->title}}</td>
+                <td>{{$news->status}}</td>
+                <td>{{$news->author}}</td>
+                <td>{{$news->created_at}}</td>
                 <td><a href="">Редактировать</a><a href="" style="color: red">Удалить</a> </td>
             </tr>
             @empty

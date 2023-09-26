@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\CategoryNewsTrait;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class CategoryController extends Controller
@@ -17,8 +18,9 @@ class CategoryController extends Controller
      */
     public function index(): View
     {
+        $newsCategories = DB::table('categories')->get();
         return \view('admin.categories.index', [
-            'categoriesNewsList' => $this->getCategoriesNews(),
+            'categoriesNewsList' => $newsCategories,
         ]);
     }
 
@@ -36,9 +38,15 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $request->flash();
-        $data = $request->session()->all();
-        $this->addCategory($data['_old_input']);
-        return redirect(route('admin.categories.index'));
+        $data = $request->all();
+        $categories = DB::table('categories')->count();
+
+        DB::table('categories')->insert([
+            'id'=> $categories + 1,
+            'title' => $data['title'],
+            'description' => $data['description'],
+            'created_at' => now(),
+        ]);
     }
 
     /**

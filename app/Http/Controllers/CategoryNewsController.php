@@ -2,21 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
+
 class CategoryNewsController
 {
     use CategoryNewsTrait;
 
     public function index()
     {
-        return view('categoryNews.index', [
-            'categoryNewsList' => $this->getCategoriesNews(),
-        ]);
+        $categoriesList = DB::table('categories')->get();
+        return view('categoryNews.index', ['categoryNewsList' => $categoriesList,]);
     }
 
     public function show(int $id)
     {
+        $categoryNews = DB::table('categories')->find($id);
+        $newsList = DB::table('news')
+            ->where('category_id', '=', $id)->get();
         return view('categoryNews.show', [
-            'categoryNews' => $this->getCategoriesNews($id),
+            'categoryNews' => $categoryNews,
+            'newsList' => $newsList,
             ]);
     }
 }

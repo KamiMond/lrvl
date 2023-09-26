@@ -19,14 +19,15 @@
                 @forelse($newsList as $news)
                 <div class="col">
                     <div class="card shadow-sm">
-                        <img src="{{$news['img']}}">
+                        <p>{{$news->categoryTitle}}</p>
+                        <img src="{{$news->img}}">
                         <div class="card-body">
-                            <p class="card-text">{{$news['title']}}</p>
+                            <p class="card-text">{{$news->title}}</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                    <a href="{{route('news.show', ['id'=> $news['id']])}}">Show</a>
+                                    <a href="{{route('news.show', ['id'=> $news->id])}}">Показать</a>
                                 </div>
-                                <small class="text-body-secondary">{{$news['author']}} ({{$news['created_at']}})</small>
+                                <small class="text-body-secondary">{{$news->author}} ({{$news->created_at}})</small>
                             </div>
                         </div>
                     </div>

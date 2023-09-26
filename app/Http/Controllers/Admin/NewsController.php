@@ -6,17 +6,19 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\NewsTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class NewsController extends Controller
 {
-    use NewsTrait;
     /**
      * Display a listing of the resource.
      */
     public function index(): View
     {
-        return \view('admin.news.index', ['newsList' => $this->getNews()]);
+        $newsList = DB::table('news')->get();
+        return \view('admin.news.index', ['newsList' => $newsList]);
     }
 
     /**
@@ -24,7 +26,9 @@ class NewsController extends Controller
      */
     public function create(): View
     {
-        return \view('admin.news.create');
+        $categoryList = DB::table('categories')
+            ->select('categories.id','categories.title')->get();
+        return \view('admin.news.create', ['categories' => $categoryList]);
     }
 
     /**
@@ -33,7 +37,34 @@ class NewsController extends Controller
     public function store(Request $request)
     {
         $request->flash();
-        return redirect()->route('admin.news.create');
+        $news = $request->all();
+
+        $imgPath = 'storage/' . $request->file('img')->store('images');
+
+        $newsCount = DB::table('news')->count();
+
+        $categoryIdList = DB::table('categories')->select('categories.id', 'categories.title')->get();
+        $categoryId = 1;
+        foreach ($categoryIdList as $category) {
+            if($news['category_id'] === $category->title) {
+                $categoryId = $category->id;
+            }
+        }
+
+        DB::table('news')
+            ->insert([
+                'id' => $newsCount + 1,
+                'category_id' => $categoryId,
+                'title' => $news['title'],
+                'author' => $news['author'],
+                'status' => $news['status'],
+                'description' => $news['description'],
+                'img' => $imgPath,
+                'created_at' => now(),
+            ]);
+
+        return redirect()
+            ->route('admin.news.create');
     }
 
     /**

@@ -4,7 +4,7 @@
         <h1 class="h2">Список категорий</h1>
         <div class="btn-toolbar mb-2 mb-md-0">
             <div class="btn-group me-2">
-                <a href="{{route('admin.categories.create')}}">Добавить категорию</a>
+                <a href="{{ route('admin.categories.create') }}">Добавить категорию</a>
             </div>
         </div>
     </div>
@@ -15,19 +15,16 @@
             <tr>
                 <th scope="col">#ID</th>
                 <th scope="col">Заголовок</th>
-                <th scope="col">Статус</th>
-                <th scope="col">Автор</th>
-                <th scope="col">Дата создания</th>
-                <th scope="col">Действия</th>
+                <th scope="col">Описание</th>
             </tr>
             </thead>
             <tbody>
             @forelse($categoriesNewsList as $category)
 
                 <tr>
-                    <td>{{$category['id']}}</td>
-                    <td>{{$category['title']}}</td>
-                    <td>{{$category['description']}}</td>
+                    <td>{{$category->id}}</td>
+                    <td>{{$category->title}}</td>
+                    <td>{{$category->description}}</td>
                     <td><a href="">Редактировать</a><a href="" style="color: red">Удалить</a> </td>
                 </tr>
             @empty
