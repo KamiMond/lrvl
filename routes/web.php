@@ -19,8 +19,8 @@ use App\Http\Controllers\WelcomeController;
 |
 */
 
-Route::get('/', [WelcomeController::class, 'index'])
-    ->name('welcome');
+Route::get('/', [WelcomeController::class])
+    ->name('home');
 
 Route::get('/about-project', function () {
     return view('aboutproject');
@@ -28,13 +28,13 @@ Route::get('/about-project', function () {
 
 Route::get('/news', [NewsController::class, 'index'])
     ->name('news');
-Route::get('news/{id}/show', [NewsController::class,'show'])
+Route::get('news/{news}', [NewsController::class,'show'])
     ->where('id', '\d+')
     ->name('news.show');
 
 Route::get('/categoryNews', [CategoryNewsController::class, 'index'])
     ->name('categoryNews');
-Route::get('/categoryNews/{id}/show', [CategoryNewsController::class, 'show'])
+Route::get('/categoryNews/{category}', [CategoryNewsController::class, 'show'])
     ->where('id', '\d+')
     ->name('categoryNews.show');
 

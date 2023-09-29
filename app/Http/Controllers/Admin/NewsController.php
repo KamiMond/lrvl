@@ -4,11 +4,15 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\NewsTrait;
+use App\Models\Category;
+use App\Models\News;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use function PHPUnit\Framework\returnCallback;
 
 class NewsController extends Controller
 {
@@ -17,7 +21,12 @@ class NewsController extends Controller
      */
     public function index(): View
     {
-        $newsList = DB::table('news')->get();
+        $newsList = News::query()
+            ->status()
+            ->with('category')
+            ->orderByDesc('id')
+            ->paginate(5);
+        $newsList->withQueryString();
         return \view('admin.news.index', ['newsList' => $newsList]);
     }
 
@@ -26,8 +35,7 @@ class NewsController extends Controller
      */
     public function create(): View
     {
-        $categoryList = DB::table('categories')
-            ->select('categories.id','categories.title')->get();
+        $categoryList = Category::all();
         return \view('admin.news.create', ['categories' => $categoryList]);
     }
 
@@ -37,34 +45,16 @@ class NewsController extends Controller
     public function store(Request $request)
     {
         $request->flash();
-        $news = $request->all();
+        $data = $request->only(['category_id', 'title', 'author', 'img', 'status', 'description', 'created_at']);
 
-        $imgPath = 'storage/' . $request->file('img')->store('images');
-
-        $newsCount = DB::table('news')->count();
-
-        $categoryIdList = DB::table('categories')->select('categories.id', 'categories.title')->get();
-        $categoryId = 1;
-        foreach ($categoryIdList as $category) {
-            if($news['category_id'] === $category->title) {
-                $categoryId = $category->id;
-            }
+        $news = new News($data);
+        if($news->save()) {
+            return redirect()
+                ->route('admin.news.index')
+                ->with('success', 'Добавлена новая новость.');
         }
-
-        DB::table('news')
-            ->insert([
-                'id' => $newsCount + 1,
-                'category_id' => $categoryId,
-                'title' => $news['title'],
-                'author' => $news['author'],
-                'status' => $news['status'],
-                'description' => $news['description'],
-                'img' => $imgPath,
-                'created_at' => now(),
-            ]);
-
-        return redirect()
-            ->route('admin.news.create');
+        return back()
+            ->with('error', 'Ошибка! Не удалось добавить новость.');
     }
 
     /**
@@ -78,17 +68,29 @@ class NewsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(News $news): View
     {
-        //
+        $categories = Category::all();
+        return \view('admin.news.edit', [
+            'categories' => $categories,
+            'news' => $news
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, News $news)
     {
-        //
+        $request->flash();
+        $data = $request->only(['category_id', 'title', 'author', 'img', 'status', 'description', 'created_at']);
+        $news->fill($data);
+        if ($news->save()) {
+            return redirect()
+                ->route('admin.news.index')
+                ->with('success', 'Данные обновлены.');
+        }
+        return back()->with('error', 'Ошибка! Не удалось обновить данные.');
     }
 
     /**

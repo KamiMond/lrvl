@@ -19,7 +19,7 @@
                                 <p class="card-text">{{$category->title}}</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="btn-group">
-                                        <a href="<?=route('categoryNews.show', ['id' => $category->id]) ?>">Подробнее</a>
+                                        <a href="<?=route('categoryNews.show', $category) ?>">Подробнее</a>
                                     </div>
                                 </div>
                             </div>
@@ -29,6 +29,7 @@
                     <h2>Новостей нет</h2>
                 @endforelse
             </div>
+            {{$categoryNewsList->links()}}
         </div>
     </div>
 @endsection

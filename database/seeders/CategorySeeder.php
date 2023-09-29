@@ -17,15 +17,33 @@ class CategorySeeder extends Seeder
     }
     public function getData(): array
     {
-        $quantityCategory = 10;
-        $categoriesList = [];
-        for($i = 1; $i <= $quantityCategory; $i++) {
-            $categoriesList[$i] = [
-                'title' => fake()->jobTitle(),
-                'description' => fake()->text,
-                'created_at' => now(),
+        return
+            [
+                [
+                    'title' => 'Общество',
+                    'description' => 'Всё самое важное о событиях в мире',
+                    'created_at' => now()
+                ],
+                [
+                    'title' => 'Экономика',
+                    'description' => 'Основные тренды в сфере финансов',
+                    'created_at' => now()
+                ],
+                [
+                    'title' => 'Спорт',
+                    'description' => 'Главные нвости в спортивном мире',
+                    'created_at' => now()
+                ],
+                [
+                    'title' => 'Наука',
+                    'description' => 'Научные открытия, прорывы, эксперименты',
+                    'created_at' => now()
+                ],
+                [
+                    'title' => 'Культура',
+                    'description' => 'Вести из мира искусства и творчества',
+                    'created_at' => now()
+                ]
             ];
-        }
-        return $categoriesList;
     }
 }

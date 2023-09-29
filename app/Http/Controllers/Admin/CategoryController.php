@@ -3,22 +3,20 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\CategoryNewsTrait;
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
-
-    use CategoryNewsTrait;
     /**
      * Display a listing of the resource.
      */
     public function index(): View
     {
-        $newsCategories = DB::table('categories')->get();
+        $newsCategories = Category::query()->paginate(10);
         return \view('admin.categories.index', [
             'categoriesNewsList' => $newsCategories,
         ]);
@@ -35,18 +33,19 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->flash();
-        $data = $request->all();
-        $categories = DB::table('categories')->count();
+        $data = $request->only('title', 'description');
 
-        DB::table('categories')->insert([
-            'id'=> $categories + 1,
-            'title' => $data['title'],
-            'description' => $data['description'],
-            'created_at' => now(),
-        ]);
+        $category = new Category($data);
+        if ($category->save()) {
+            return redirect()
+                ->route('admin.categories.index')
+                ->with('success', 'Добавлена новая категория.');
+        }
+        return back()
+            ->with('error', 'Ошибка! Не удалось добавить категорию.');
     }
 
     /**
@@ -60,17 +59,25 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Category $category): View
     {
-        //
+        return \view('admin.categories.edit', ['category' => $category]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Category $category)
     {
-        //
+        $data = $request->only(['title', 'description']);
+        $category->fill($data);
+        if($category->save()) {
+            return redirect()
+                ->route('admin.categories.index')
+                ->with('success', 'Данные обновлены.');
+        }
+        return back()
+            ->with('error', 'Ошибка! Не удалось обновить данные.');
     }
 
     /**

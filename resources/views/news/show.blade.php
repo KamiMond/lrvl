@@ -1,5 +1,5 @@
 @extends('layouts.main')
-@section('title') Новость {{$news->title}} @parent @stop
+@section('title') Новость {{$news->category->title}} @parent @stop
 @section('content')
     <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 mt-1">

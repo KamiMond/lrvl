@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 class WelcomeController
 {
-    public function index() {
+    public function __invoke() {
         return view('welcome', ['img' => fake()->imageUrl()]);
     }
 }

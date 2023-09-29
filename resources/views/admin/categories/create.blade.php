@@ -1,5 +1,6 @@
 @extends('layouts.admin')
 @section('content')
+    @include('inc.message')
     <form method="post" action="{{ route('admin.categories.store') }}">
         @csrf
         <div class="mb-3">

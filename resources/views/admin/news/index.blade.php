@@ -10,12 +10,20 @@
     </div>
 
     <div class="table-responsive small">
+        @include('inc.message')
+        <select id="filter">
+            <option>selected</option>
+            <option>{{\App\Enums\News\Status::DRAFT->value}}</option>
+            <option>{{\App\Enums\News\Status::ACTIVE->value}}</option>
+            <option>{{\App\Enums\News\Status::BLOCKED->value}}</option>
+        </select>
         <table class="table table-striped table-sm">
             <thead>
             <tr>
                 <th scope="col">#ID</th>
                 <th scope="col">Заголовок</th>
                 <th scope="col">Статус</th>
+                <th scope="col">Категория</th>
                 <th scope="col">Автор</th>
                 <th scope="col">Дата создания</th>
                 <th scope="col">Действия</th>
@@ -27,9 +35,10 @@
                 <td>{{$news->id}}</td>
                 <td>{{$news->title}}</td>
                 <td>{{$news->status}}</td>
+                <td>{{$news->category->title}}</td>
                 <td>{{$news->author}}</td>
                 <td>{{$news->created_at}}</td>
-                <td><a href="">Редактировать</a><a href="" style="color: red">Удалить</a> </td>
+                <td><a href="{{ route('admin.news.edit', $news )}}">Редактировать</a><a href="" style="color: red">Удалить</a> </td>
             </tr>
             @empty
                 <tr>
@@ -38,7 +47,18 @@
                     </td>
                 </tr>
             @endforelse
+            {{$newsList->links()}}
             </tbody>
         </table>
     </div>
+    @push('js')
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                let filter = document.getElementById('filter');
+                filter.addEventListener("change", function (event) {
+                    location.href = "?F=" + this.value;
+                })
+            })
+        </script>
+    @endpush
 @endsection
