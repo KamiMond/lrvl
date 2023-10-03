@@ -1,5 +1,10 @@
 @extends('layouts.admin')
 @section('content')
+    @if($errors->any())
+        @foreach($errors->all() as $error)
+            <x-alert :message="$error" type="danger"></x-alert>
+        @endforeach
+    @endif
     @include('inc.message')
     <form method="post" enctype="multipart/form-data" action="{{ route('admin.news.store') }}">
         @csrf
@@ -20,9 +25,12 @@
 
         <select class="form-select mb-3" name="status" aria-label="statusNews">
             <option selected>Open this select menu</option>
-            <option @if(old('status') === 'DRAFT') selected @endif >DRAFT</option>
-            <option @if(old('status') === 'ACTIVE') selected @endif >ACTIVE</option>
-            <option @if(old('status') === 'BLOCKED') selected @endif >BLOCKED</option>
+            <option @selected(old('status') === \App\Enums\News\Status::DRAFT->value) >
+                {{\App\Enums\News\Status::DRAFT->value}}</option>
+            <option @selected(old('status') === \App\Enums\News\Status::ACTIVE->value) >
+                {{\App\Enums\News\Status::ACTIVE->value}}</option>
+            <option @selected(old('status') === \App\Enums\News\Status::BLOCKED->value) >
+                {{\App\Enums\News\Status::BLOCKED->value}}</option>
         </select>
 
         <select class="form-select mb-3" name="category_id" aria-label="statusNews">

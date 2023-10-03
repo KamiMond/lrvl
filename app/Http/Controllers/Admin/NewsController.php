@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\News\Status;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\News\CreateRequest;
+use App\Http\Requests\Admin\News\EditRequest;
 use App\Models\Category;
 use App\Models\News;
 use Illuminate\Http\RedirectResponse;
@@ -11,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rules\Enum;
 use Illuminate\View\View;
 use function PHPUnit\Framework\returnCallback;
 
@@ -42,11 +46,17 @@ class NewsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateRequest $request): RedirectResponse
     {
-        $request->flash();
-        $data = $request->only(['category_id', 'title', 'author', 'img', 'status', 'description', 'created_at']);
+        $data = $request->only(['category_id', 'title', 'author', 'img', 'status', 'description']);
 
+        $name = null;
+        if($request->file('img')) {
+            $path = Storage::putFile('public/images/news', $request->file('img'));
+            $name = Storage::url($path);
+            dd($name);
+        }
+        $data['img'] = $name;
         $news = new News($data);
         if($news->save()) {
             return redirect()
@@ -80,10 +90,18 @@ class NewsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, News $news)
+    public function update(EditRequest $request, News $news): RedirectResponse
     {
-        $request->flash();
-        $data = $request->only(['category_id', 'title', 'author', 'img', 'status', 'description', 'created_at']);
+        $data = $request->only(['category_id', 'title', 'author', 'img', 'status', 'description']);
+        $name = null;
+        if ($request->file('img')) {
+            $request->validate([
+                'img' => ['sometimes','image', 'mimes:jpeg,bmp,png, |max:1500']
+            ]);
+            $path = Storage::putFile('public/images/news', $request->file('img'));
+            $name = Storage::url($path);
+        }
+        $data['img'] = $name;
         $news->fill($data);
         if ($news->save()) {
             return redirect()
@@ -96,8 +114,15 @@ class NewsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(News $news): RedirectResponse
     {
-        //
+        if ($news->delete()) {
+            return \redirect()
+                ->route('admin.news.index')
+                ->with('success', 'Запись удалена.');
+        }
+        return \redirect()
+            ->route('admin.news.index')
+            ->with('error', 'Ошибка! Запись не удалена.');
     }
 }

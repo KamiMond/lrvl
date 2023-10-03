@@ -26,7 +26,13 @@
                     <td>{{$category->id}}</td>
                     <td>{{$category->title}}</td>
                     <td>{{$category->description}}</td>
-                    <td><a href="{{route('admin.categories.edit', $category)}}">Редактировать</a><a href="" style="color: red">Удалить</a> </td>
+                    <td><a href="{{ route('admin.categories.edit', $category) }}">Редактировать</a>
+                        <form method="post" action="{{ route('admin.categories.destroy', $category) }}">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" style="color: red">Удалить</button>
+                        </form>
+                    </td>
                 </tr>
             @empty
                 <tr>

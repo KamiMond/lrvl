@@ -1,5 +1,10 @@
 @extends('layouts.admin')
 @section('content')
+    @if($errors->any())
+        @foreach($errors->all() as $error)
+            <x-alert :message="$error" type="danger"></x-alert>
+        @endforeach
+    @endif
     @include('inc.message')
     <form method="post" action="{{ route('admin.categories.update', $category) }}">
         @csrf

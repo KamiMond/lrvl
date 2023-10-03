@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Categories\CreateRequest;
+use App\Http\Requests\Admin\Categories\Edit;
 use App\Models\Category;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -33,7 +35,7 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(CreateRequest $request): RedirectResponse
     {
         $request->flash();
         $data = $request->only('title', 'description');
@@ -67,7 +69,7 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Category $category)
+    public function update(CreateRequest $request, Category $category): RedirectResponse
     {
         $data = $request->only(['title', 'description']);
         $category->fill($data);
@@ -83,8 +85,13 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Category $category): RedirectResponse
     {
-        //
+        if($category->delete()) {
+            return redirect()->route('admin.categories.index')
+                ->with('success', 'Категория удалена.');
+        }
+        return redirect()->route('admin.categories.index')
+            ->with('error', 'Ошибка! Категория не удалена.');
     }
 }

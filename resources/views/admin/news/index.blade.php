@@ -38,7 +38,13 @@
                 <td>{{$news->category->title}}</td>
                 <td>{{$news->author}}</td>
                 <td>{{$news->created_at}}</td>
-                <td><a href="{{ route('admin.news.edit', $news )}}">Редактировать</a><a href="" style="color: red">Удалить</a> </td>
+                <td><a href="{{route('admin.news.edit', $news)}}">Редактировать</a>
+                    <form method="post" enctype="multipart/form-data" action="{{route('admin.news.destroy', $news)}}">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit">Удалить</button>
+                    </form>
+                </td>
             </tr>
             @empty
                 <tr>
