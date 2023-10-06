@@ -38,16 +38,11 @@
         </div>
 
         <select class="form-select mb-3" name="status" aria-label="statusNews">
-            <option selected>Open this select menu</option>
-            <option @selected(old('status', $news->status) === \App\Enums\News\Status::DRAFT->value) >
-                {{\App\Enums\News\Status::DRAFT->value}}
-            </option>
-            <option @selected(old('status', $news->status) === \App\Enums\News\Status::ACTIVE->value) >
-                {{\App\Enums\News\Status::ACTIVE->value}}
-            </option>
-            <option @selected(old('status', $news->status) === \App\Enums\News\Status::BLOCKED->value) >
-                {{\App\Enums\News\Status::BLOCKED->value}}
-            </option>
+            @foreach(\App\Enums\News\Status::getEnums() as $enum)
+                <option @selected(old('status', $news->status) === $enum) >
+                    {{ $enum }}
+                </option>
+            @endforeach
         </select>
 
         <div class="mb-3">

@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layouts.app')
     @section('title') Категория новости: {{$category->id}} @parent @stop
     @section('content')
         <div class="container">

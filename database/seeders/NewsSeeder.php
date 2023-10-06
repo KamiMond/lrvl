@@ -23,7 +23,7 @@ class NewsSeeder extends Seeder
         for ($i = 1; $i <= $quantityNews; $i ++) {
             $newsList[$i] = [
                 'category_id' => fake()->numberBetween(1, 5),
-                'title' => fake()->jobTitle,
+                'title' => fake()->jobTitle(),
                 'author' => fake()->userName(),
                 'img' => fake()->imageUrl(200, 150),
                 'status' => fake()->randomElement(Status::getEnums()),
