@@ -12,11 +12,13 @@
                 <a class="nav-link" href="{{ route('news') }}">Новости</a>
             </li>
 
-            @if(Auth::user())
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin.index') }}">Админка</a>
-                </li>
-            @endif
+            @auth
+                @if(Auth::user()->is_admin === true)
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('admin.index') }}">Админка</a>
+                    </li>
+                @endif
+            @endauth
         </ul>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -45,6 +47,11 @@
                         </li>
                     @endif
                 @else
+                    @if(Auth::user()->avatar !== null)
+                        <li class="nav-item">
+                            <img src="{{ Auth::user()->avatar }}" style="width: 45px">
+                        </li>
+                    @endif
                     <li class="nav-item dropdown">
                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                             {{ Auth::user()->name }}

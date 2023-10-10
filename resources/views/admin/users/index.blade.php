@@ -25,6 +25,7 @@
                 <th scope="col">Имя</th>
                 <th scope="col">E-mail</th>
                 <th scope="col">Дата регистрации</th>
+                <th scope="col">Группа юзеров</th>
             </tr>
             </thead>
             <tbody>
@@ -35,11 +36,14 @@
                     <td>{{$user->email}}</td>
                     <td>{{$user->created_at}}</td>
                     <td>
-                        <a href="{{ route('admin.isadmin', $user) }}">
-                            <button type="submit">@if($user->is_admin)Разжаловать @else Назначить@endif</button>
-                        </a>
+                        @if($user->is_admin === true)
+                            <a href="{{ route('admin.isadmin', $user) }}" type="button" class="btn btn-danger">Разжаловать</a>
+                        @else
+                            <a href="{{ route('admin.isadmin', $user) }}" type="button" class="btn btn-success">Назначить</a>
+                        @endif
                     </td>
-                    <td><a href="{{ route('admin.users.edit', $user) }}">Редактировать</a>
+                    <td>
+                        <a href="{{ route('admin.users.edit', $user) }}" type="button" class="btn">Редактировать</a>
                         <form method="post" enctype="multipart/form-data" action="{{ route('admin.users.destroy', $user) }}">
                             @csrf
                             @method('DELETE')

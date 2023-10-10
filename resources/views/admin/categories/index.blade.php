@@ -21,7 +21,6 @@
             </thead>
             <tbody>
             @forelse($categoriesNewsList as $category)
-                @dump($categoriesNewsList)
                 <tr>
                     <td>{{$category->id}}</td>
                     <td>{{$category->title}}</td>

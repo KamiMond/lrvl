@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class UsersController extends Controller
@@ -13,9 +14,17 @@ class UsersController extends Controller
 
     public function isadmin(User $user): RedirectResponse
     {
-        $user->is_admin = !$user->is_admin;
-        $user->save();
-        return redirect()->route('admin.users.index');
+        if ($user->id != Auth::id()) {
+            $user->is_admin = !$user->is_admin;
+            $user->save();
+            return redirect()
+                ->route('admin.users.index')
+                ->with('success', 'Права изменены.');
+        } else {
+            return redirect()
+                ->route('admin.users.index')
+                ->with('error', 'Ошибка! Административные права не могут быть отменены.');
+        }
     }
 
     /**
@@ -23,7 +32,9 @@ class UsersController extends Controller
      */
     public function index(): View
     {
-        $usersList = User::all();
+        $usersList = User::query()
+            ->where('id', '!=', Auth::id())
+            ->get();
         return view('admin.users.index', ['usersList' => $usersList]);
     }
 
