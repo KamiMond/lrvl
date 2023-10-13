@@ -33,6 +33,13 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-2"
+                       @if(request()->routeIs('admin.resources.index')) active @endif href="{{route('admin.resources.index')}}">
+                        <svg class="bi"><use xlink:href="#people"/></svg>
+                        Ресурсы
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link d-flex align-items-center gap-2" @if(request()->routeIs('admin.users.index')) active @endif href="{{ route('admin.parser') }}">
                         <svg class="bi"><use xlink:href="#people"/></svg>
                         Парсер
