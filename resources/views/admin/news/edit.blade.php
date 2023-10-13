@@ -54,3 +54,17 @@
         <button class="btn btn-primary mt-2" type="submit">Изменить</button>
     </form>
 @endsection
+@push('js')
+
+    <script>
+        ClassicEditor
+            .create( document.querySelector( '#descriptionNews' ),{
+                ckfinder: {
+                    uploadUrl: '{{ route('image.upload').'?_token='.csrf_token() }}',
+                }
+            })
+            .catch( error => {
+                console.error( error );
+            } );
+    </script>
+@endpush

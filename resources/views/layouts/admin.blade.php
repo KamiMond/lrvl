@@ -7,11 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dashboard Template · Bootstrap v5.3</title>
 
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
 
     <link href="{{asset('assets/css/bootstrap.min.css')}}" rel="stylesheet">
-
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
 
     <style>
         .bd-placeholder-img {

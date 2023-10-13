@@ -6,21 +6,22 @@ use App\Events\DefineLoginEvent;
 use App\Models\User;
 use App\Services\Interfaces\SocialInterface;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
 
 class SocialProviderController extends Controller
 {
-    public function redirect()
+    public function redirect(string $driver)
     {
-        return Socialite::driver('vkontakte')->redirect();
+        return Socialite::driver($driver)->redirect();
     }
 
-    public function callback(SocialInterface $social)
+    public function callback(string $driver, SocialInterface $social): RedirectResponse
     {
         try {
-            $socialUser = Socialite::driver('vkontakte')->user();
+            $socialUser = Socialite::driver($driver)->user();
         } catch (\Exception $e) {
             return redirect()
                 ->route('login');
